@@ -4,3 +4,6 @@
 *.o
 *.exe
 *.zip
+.vs
+.vscode
+*.json
