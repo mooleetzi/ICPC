@@ -8,3 +8,4 @@
 .vscode
 *.json
 icpc.*
+*.class
