@@ -10,22 +10,6 @@ ll a[maxn];
 ll s[maxn];
 int main(int argc, char const *argv[])
 {
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-    cout.tie(0);
-    a[1] = a[2] = 1;
-    s[1] = a[1];
-    s[2] = s[1] + a[2];
-    for (int i = 3; i <= maxn; i++)
-    {
-        a[i] = a[i - a[i - 1]] + a[i - 1 - a[i - 2]];
-        s[i] = s[i - 1] + a[i];
-    }
-    for (int i = 1; i <= maxn; i++)
-    {
-        cout << s[i] << " ";
-        if (i % 10 == 0)
-            cout << "\n";
-    }
+    int a[5] = {1, 2, 3, 4, 5};
     return 0;
 }
