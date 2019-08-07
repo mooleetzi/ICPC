@@ -1,3 +1,4 @@
+//整数分块儿
 #include <bits/stdc++.h>
 #define lson rt << 1, l, mid
 #define rson rt << 1 | 1, mid + 1, r
@@ -6,8 +7,9 @@ using ll = long long;
 using ull = unsigned long long;
 using pa = pair<int, int>;
 using ld = long double;
-int n, m, k;
-const int maxn = 1e5 + 10;
+ll n, m, k;
+const int maxn = 1e7 + 1000;
+const int mod = 998244353;
 template <class T>
 inline T read(T &ret)
 {
@@ -42,11 +44,27 @@ inline void write(T n)
     }
     putchar(n % 10 + '0');
 }
+ll solve(ll n)
+{
+    ll ans = n + n / 2;
+    for (ll i = 3; i <= n;)
+    {
+        ll to = n / (n / i);
+        ans += (n / i) * (to - i + 1);
+        i = to + 1;
+    }
+    return ans;
+}
 int main(int argc, char const *argv[])
 {
-#ifndef ONLINE_JUDGE
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
-#endif
+    int t;
+    read(t);
+    int tot = 0;
+    while (t--)
+    {
+        int n;
+        read(n);
+        printf("Case %d: %lld\n", ++tot, solve(n));
+    }
     return 0;
 }

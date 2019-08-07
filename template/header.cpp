@@ -9,7 +9,7 @@ using ld = long double;
 int n, m, k;
 const int maxn = 1e5 + 10;
 template <class T>
-inline void read(T &ret)
+inline T read(T &ret)
 {
     int f = 1;
     ret = 0;
@@ -26,6 +26,7 @@ inline void read(T &ret)
         ch = getchar();
     }
     ret *= f;
+    return ret;
 }
 template <class T>
 inline void write(T n)
@@ -40,4 +41,12 @@ inline void write(T n)
         write(n / 10);
     }
     putchar(n % 10 + '0');
+}
+int main(int argc, char const *argv[])
+{
+#ifndef ONLINE_JUDGE
+    freopen("in.txt", "r", stdin);
+    freopen("out.txt", "w", stdout);
+#endif
+    return 0;
 }

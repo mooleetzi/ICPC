@@ -1,3 +1,4 @@
+//二分图最大匹配裸题目，匈牙利算法
 #include <bits/stdc++.h>
 #define lson rt << 1, l, mid
 #define rson rt << 1 | 1, mid + 1, r
@@ -7,7 +8,7 @@ using ull = unsigned long long;
 using pa = pair<int, int>;
 using ld = long double;
 int n, m, k;
-const int maxn = 1e5 + 10;
+const int maxn = 220;
 template <class T>
 inline T read(T &ret)
 {
@@ -42,11 +43,43 @@ inline void write(T n)
     }
     putchar(n % 10 + '0');
 }
+int visy[maxn], line[maxn], g[maxn][maxn];
+int find(int u)
+{
+    for (int i = 1; i <= m; i++)
+    {
+        if (g[u][i] && !visy[i])
+        {
+            visy[i] = 1;
+            if (!line[i] || find(line[i]))
+            {
+                line[i] = u;
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
 int main(int argc, char const *argv[])
 {
-#ifndef ONLINE_JUDGE
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
-#endif
+    read(n), read(m);
+    for (int i = 1; i <= n; i++)
+    {
+        int t;
+        read(t);
+        for (int j = 1; j <= t; j++)
+        {
+            int now;
+            read(now);
+            g[i][now] = 1;
+        }
+    }
+    int ans = 0;
+    for (int i = 1; i <= n; i++)
+    {
+        memset(visy, 0, sizeof visy);
+        ans += find(i);
+    }
+    write(ans);
     return 0;
 }

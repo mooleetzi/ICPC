@@ -7,7 +7,7 @@ using ull = unsigned long long;
 using pa = pair<int, int>;
 using ld = long double;
 int n, m, k;
-const int maxn = 1e5 + 10;
+const int maxn = 1e6 + 10;
 template <class T>
 inline T read(T &ret)
 {
@@ -44,9 +44,12 @@ inline void write(T n)
 }
 int main(int argc, char const *argv[])
 {
-#ifndef ONLINE_JUDGE
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
-#endif
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    ld h, l;
+    cin >> h >> l;
+    ld ans = (l * l - h * h) / (h * 2);
+    cout << fixed << setprecision(7) << ans << '\n';
     return 0;
 }

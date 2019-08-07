@@ -7,7 +7,7 @@ using ull = unsigned long long;
 using pa = pair<int, int>;
 using ld = long double;
 int n, m, k;
-const int maxn = 1e5 + 10;
+const int maxn = 1e6 + 10;
 template <class T>
 inline T read(T &ret)
 {
@@ -42,11 +42,38 @@ inline void write(T n)
     }
     putchar(n % 10 + '0');
 }
+int a[maxn];
 int main(int argc, char const *argv[])
 {
-#ifndef ONLINE_JUDGE
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
-#endif
+    read(n);
+    int x, y;
+    read(x);
+    read(y);
+    for (int i = 1; i <= n; i++)
+        read(a[i]);
+    for (int i = 1; i <= n; i++)
+    {
+        int f = 1;
+        for (int j = i - x; j > 0 && j < i; j++)
+            if (a[j] <= a[i])
+            {
+                f = 0;
+                break;
+            }
+        if (f)
+        {
+            for (int j = i + 1; j <= n && j <= i + y; j++)
+                if (a[j] <= a[i])
+                {
+                    f = 0;
+                    break;
+                }
+        }
+        if (f)
+        {
+            cout << i << "\n";
+            break;
+        }
+    }
     return 0;
 }

@@ -1,3 +1,9 @@
+/*
+    n!末尾0的个数只与5这个素因子有关
+    有公式f(n,p)=f(n/p,p)+n/p,求n!内因子p的个数
+    打表可知出现n个0的情况在4*n+1以后，由此可以将区间确定在一个小范围
+ */
+#pragma optimize(3)
 #include <bits/stdc++.h>
 #define lson rt << 1, l, mid
 #define rson rt << 1 | 1, mid + 1, r
@@ -6,7 +12,7 @@ using ll = long long;
 using ull = unsigned long long;
 using pa = pair<int, int>;
 using ld = long double;
-int n, m, k;
+int n, m, k, mod;
 const int maxn = 1e5 + 10;
 template <class T>
 inline T read(T &ret)
@@ -42,11 +48,36 @@ inline void write(T n)
     }
     putchar(n % 10 + '0');
 }
+ull f(ull n, int p)
+{
+    if (n == 0)
+        return 0;
+    return f(n / p, p) + n / p;
+}
+ull solve(ull n, int p)
+{
+    for (ull i = 4 * n + 1;; i++)
+    {
+        if (f(i, p) == n)
+            return i;
+        if (f(i, p) > n)
+            return 0;
+    }
+}
 int main(int argc, char const *argv[])
 {
-#ifndef ONLINE_JUDGE
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
-#endif
+    int t;
+    read(t);
+    int tot = 0;
+    while (t--)
+    {
+        ull a;
+        read(a);
+        ull ans = solve(a, 5);
+        if (!ans)
+            printf("Case %d: impossible\n", ++tot);
+        else
+            printf("Case %d: %llu\n", ++tot, ans);
+    }
     return 0;
 }

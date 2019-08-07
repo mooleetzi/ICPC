@@ -6,8 +6,9 @@ using ll = long long;
 using ull = unsigned long long;
 using pa = pair<int, int>;
 using ld = long double;
-int n, m, k;
-const int maxn = 1e5 + 10;
+ll n, m, k;
+const int maxn = 1e6 + 10;
+const int mod = 998244353;
 template <class T>
 inline T read(T &ret)
 {
@@ -44,9 +45,27 @@ inline void write(T n)
 }
 int main(int argc, char const *argv[])
 {
-#ifndef ONLINE_JUDGE
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
-#endif
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        ll a, b, c;
+        ll a_, b_, c_;
+        cin >> a >> b >> c;
+        cin >> a_ >> b_ >> c_;
+        ll deno = a_ * (c - b) + b_ * (a - c) + c_ * (b - a);
+        ll mu = a + b + c;
+        if (deno % mu == 0)
+            cout << deno / mu << "\n";
+        else
+        {
+            ll g = __gcd(abs(deno), abs(mu));
+            deno /= g, mu /= g;
+            cout << deno << "/" << mu << '\n';
+        }
+    }
     return 0;
 }

@@ -1,12 +1,13 @@
 #include <bits/stdc++.h>
 #define lson rt << 1, l, mid
 #define rson rt << 1 | 1, mid + 1, r
+#define debug
 using namespace std;
 using ll = long long;
 using ull = unsigned long long;
 using pa = pair<int, int>;
 using ld = long double;
-int n, m, k;
+int n, m, k, p;
 const int maxn = 1e5 + 10;
 template <class T>
 inline T read(T &ret)
@@ -42,11 +43,36 @@ inline void write(T n)
     }
     putchar(n % 10 + '0');
 }
+int phi[maxn];
+void init()
+{
+    for (int i = 1; i < maxn; i++)
+        phi[i] = i;
+    for (int i = 2; i < maxn; i++)
+        if (phi[i] == i)
+            for (int j = i; j < maxn; j += i)
+                phi[j] = phi[j] * (i - 1) / i;
+#ifdef debug
+    for (int i = 1; i < 100; i++)
+        cout << i << ": " << phi[i] << "\n";
+#endif
+}
 int main(int argc, char const *argv[])
 {
-#ifndef ONLINE_JUDGE
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
-#endif
+    init();
+    int t;
+    read(t);
+    while (t--)
+    {
+        read(m), read(n), read(p);
+        ll ans = 0;
+        for (int i = 1; i <= m; i++)
+            for (int j = 1; j <= n; j++)
+            {
+                ll cur = phi[i * j] / (phi[i] * phi[j]);
+                ans += cur;
+            }
+        cout << ans % p << "\n";
+    }
     return 0;
 }
