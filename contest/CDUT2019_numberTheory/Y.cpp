@@ -83,7 +83,7 @@ int main(int argc, char const *argv[])
     cin.tie(0);
     cout.tie(0);
     int a, b;
-    freopen("out.txt", "w", stdout);
+    // freopen("out.txt", "w", stdout);
     init();
     for (auto x : s)
         cout << x << "\n";

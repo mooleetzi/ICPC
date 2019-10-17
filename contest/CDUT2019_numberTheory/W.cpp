@@ -84,7 +84,7 @@ int main(int argc, char const *argv[])
         for (int i = a; i <= b; i++)
             deno += isprime(f(i));
         ld ans = deno / mu * 100;
-        cout << fixed << setprecision(2) << ans + 1e-5 << "\n";
+        cout << fixed << setprecision(2) << ans + 1e-4 << "\n";
     }
     return 0;
 }

@@ -1,31 +1,90 @@
-/*
-    dp[i][j]:[i,j)区间的答案
-    转移方程：dp[i][j]=min{dp[i][k]+dp[k+1][j]+a[i-1]*a[k]*a[j]}
-*/
-// #include<bits/stdc++.h>
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#if __cplusplus >= 201103L
+#include <unordered_map>
+#include <unordered_set>
+#endif
+#include <vector>
+#define lson rt << 1, l, mid
+#define rson rt << 1 | 1, mid + 1, r
+#define LONG_LONG_MAX 9223372036854775807LL
+#define ll LL
 using namespace std;
+typedef long long ll;
+typedef long double ld;
+typedef unsigned long long ull;
+typedef pair<int, int> P;
+int n, m, k;
 const int maxn = 1e2 + 10;
-int a[maxn];
-int dp[maxn][maxn];
-int n;
+template <class T>
+inline T read()
+{
+    int f = 1;
+    T ret = 0;
+    char ch = getchar();
+    while (!isdigit(ch))
+    {
+        if (ch == '-')
+            f = -1;
+        ch = getchar();
+    }
+    while (isdigit(ch))
+    {
+        ret = (ret << 1) + (ret << 3) + ch - '0';
+        ch = getchar();
+    }
+    ret *= f;
+    return ret;
+}
+template <class T>
+inline void write(T n)
+{
+    if (n < 0)
+    {
+        putchar('-');
+        n = -n;
+    }
+    if (n >= 10)
+    {
+        write(n / 10);
+    }
+    putchar(n % 10 + '0');
+}
+template <class T>
+inline void writeln(const T &n)
+{
+    write(n);
+    puts("");
+}
+ll dp[maxn][maxn], a[maxn];
 int main(int argc, char const *argv[])
 {
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-    cout.tie(0);
-    cin >> n;
-    memset(dp, 0x3f, sizeof dp);
+#ifndef ONLINE_JUDGE
+    freopen("in.txt", "r", stdin);
+    // freopen("out.txt", "w", stdout);
+#endif
+    n = read<int>();
     for (int i = 1; i <= n; i++)
-        cin >> a[i], dp[i][i] = 0;
-    for (int l = 1; l <= n; l++)
-        for (int i = 2; i + l <= n; i++)
+        a[i] = read<ll>();
+    for (int len = 2; len <= n; len++)
+    {
+        for (int i = 1; i + len <= n; i++)
         {
-            int j = i + l;
-            for (int k = i; k < j; k++)
-                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k + 1][j] + a[i - 1] * a[k] * a[j]);
+            int j = i + len;
+            dp[i][j] = 1e12;
+            for (int k = i + 1; k < j; k++)
+                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j] + a[i] * a[k] * a[j]);
         }
-    cout << dp[2][n];
+    }
+    writeln(dp[1][n]);
     return 0;
 }

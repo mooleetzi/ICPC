@@ -1,11 +1,20 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <vector>
 #define lson rt << 1, l, mid
 #define rson rt << 1 | 1, mid + 1, r
 using namespace std;
-using ll = long long;
-using ull = unsigned long long;
-using pa = pair<int, int>;
-using ld = long double;
+typedef long long ll;
+typedef long double ld;
+typedef unsigned long long ull;
 int n, m, k;
 const int maxn = 1e5 + 10;
 template <class T>

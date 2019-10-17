@@ -1,26 +1,32 @@
-#include <iostream>
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
 #include <fstream>
-#include <algorithm>
+#include <iostream>
+#include <random>
 #include <windows.h>
 using namespace std;
 //ofstream cout("data.in");
 int main()
 {
-	srand(time(0));
-//	srand( (unsigned)time( NULL ) );
-	freopen("input.txt","w",stdout);
-	int n=rand()%10+1;
-    int m = rand() % n + 1;
-    printf("%d %d\n",n,m);
-	for (int i=1;i<=n;i++){
-        for (int j = 1; j <= n;j++)
-            printf("%d ", rand() % 10 + 1);
-        printf("\n");
+    // freopen("input.txt", "w", stdout);
+    srand(time(0));
+    const int N = 1000000001;
+    mt19937 rand(time(0));
+    int n = rand() % 200;
+    printf("%d\n", n);
+    for (int i = 0; i < n; i++)
+    {
+        int q = rand() % 100;
+        printf("%d\n", q);
+        for (int i = 0; i < q; i++)
+        {
+            int x = rand() % 1000 + 1;
+            int y = rand() % 1000 + 1;
+            printf("%d %d\n", x, y);
+        }
     }
-    printf("-1 -1");
     return 0;
 }

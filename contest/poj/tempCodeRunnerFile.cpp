@@ -2,139 +2,68 @@
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
-#define ll long long
-#define lson rt << 1
-#define rson rt << 1 | 1
+#include <cstring>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <vector>
+#define lson rt << 1, l, mid
+#define rson rt << 1 | 1, mid + 1, r
+#define LONG_LONG_MAX 9223372036854775807LL
 using namespace std;
+typedef long long ll;
+typedef long double ld;
+typedef unsigned long long ull;
+int n, m, k;
 const int maxn = 1e5 + 10;
-int n, q, m;
-template <class T>
-inline T read(T &ret)
+ll p[25];
+void init()
 {
-    int f = 1;
-    ret = 0;
-    char ch = getchar();
-    while (!isdigit(ch))
-    {
-        if (ch == '-')
-            f = -1;
-        ch = getchar();
-    }
-    while (isdigit(ch))
-    {
-        ret = (ret << 1) + (ret << 3) + ch - '0';
-        ch = getchar();
-    }
-    ret *= f;
-    return ret;
+    p[1] = 3;
+    for (int i = 2; i < 24; i++)
+        p[i] = p[i - 1] * 3;
 }
-template <class T>
-inline void write(T n)
+ll solve(int x)
 {
-    if (n < 0)
+    ll t = 1;
+    ll res = p[x];
+    if (x & 1)
     {
-        putchar('-');
-        n = -n;
+        res += (x - 1) * 3;
+        t += (x - 1);
+        res += x * p[(x + 1) / 2];
+        t += x;
+        return res / t;
     }
-    if (n >= 10)
+    else
     {
-        write(n / 10);
+        ll e = x / 2;
+        for (int i = 1; i < e; i++)
+        {
+            t += 2;
+            res += 2 * p[i];
+        }
+        ++t;
+        res += p[e];
+        t += e;
+        res += e * p[e + 1];
+        t += e;
+        res += e * p[e];
+        return res / t;
     }
-    putchar(n % 10 + '0');
-}
-struct node
-{
-    int l, r;
-    ll sum, lazy;
-} tr[maxn << 2];
-inline void pushup(int rt)
-{
-    tr[rt].sum = tr[lson].sum + tr[rson].sum;
-}
-inline void pushdown(int rt)
-{
-
-    ll len = tr[rt].r - tr[rt].l + 1;
-    if (tr[rt].lazy)
-    {
-        tr[lson].lazy += tr[rt].lazy;
-        tr[rson].lazy += tr[rt].lazy;
-        tr[lson].sum += (len >> 1) * tr[rt].lazy;
-        tr[rson].sum += (len - (len >> 1)) * tr[rt].lazy;
-        tr[rt].lazy = 0;
-    }
-}
-void build(int rt, int l, int r)
-{
-    tr[rt].l = l;
-    tr[rt].r = r;
-    tr[rt].lazy = 0;
-    if (l == r)
-    {
-        read(tr[rt].sum);
-        return;
-    }
-    int mid = l + r >> 1;
-    build(lson, l, mid);
-    build(rson, mid + 1, r);
-    pushup(rt);
-}
-void update(int rt, int L, int R, ll v)
-{
-    int l = tr[rt].l;
-    int r = tr[rt].r;
-    if (l >= L && r <= R)
-    {
-        tr[rt].lazy = v;
-        tr[rt].sum += 1LL * (r - l + 1) * v;
-        return;
-    }
-    pushdown(rt);
-    int mid = l + r >> 1;
-    if (L <= mid)
-        update(lson, L, R, v);
-    if (R > mid)
-        update(rson, L, R, v);
-    pushup(rt);
-}
-ll query(int rt, int L, int R)
-{
-    int l = tr[rt].l;
-    int r = tr[rt].r;
-    if (l >= L && r <= R)
-        return tr[rt].sum;
-    pushdown(rt);
-    int mid = l + r >> 1;
-    ll ans = 0;
-    if (L <= mid)
-        ans += query(lson, L, R);
-    if (R > mid)
-        ans += query(rson, L, R);
-    return ans;
 }
 int main(int argc, char const *argv[])
 {
-    read(n);
-    read(m);
-    build(1, 1, n);
-    for (int i = 0; i < m; i++)
+#ifndef ONLINE_JUDGE
+    freopen("in.txt", "r", stdin);
+    freopen("out.txt", "w", stdout);
+#endif
+    init();
+    while (~scanf("%d", &n) && n != -1)
     {
-        char ch = getchar();
-        if (ch == 'Q')
-        {
-            int l, r;
-            read(l);
-            read(r);
-            write(query(1, l, r));
-            putchar('\n');
-        }
-        else
-        {
-            int l, r;
-            ll c;
-            read(l), read(r), read(c);
-            update(1, l, r, c);
-        }
+        printf("%d\n", solve(n));
     }
     return 0;
 }

@@ -5,6 +5,7 @@
 //约数个数/2即为全部的整数对（i，j)满足i*j=a
 //要使min(i,j)>=b
 //我们只需要将前b个自然数中的约数个数剪掉即可
+//长方形而非正方形，不用考虑完全平方数加1的情况
 #include <bits/stdc++.h>
 #define lson rt << 1, l, mid
 #define rson rt << 1 | 1, mid + 1, r
@@ -98,6 +99,8 @@ int main(int argc, char const *argv[])
             }
             if (tmp > 1)
                 ans <<= 1;
+            // if (ans & 1)
+            //     ++ans;
             ans >>= 1;
             for (int i = 1; i < b; i++)
                 if (a % i == 0)

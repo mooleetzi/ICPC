@@ -8,15 +8,17 @@ using pa = pair<int, int>;
 using ld = long double;
 const int maxn = 1e6 + 1e5;
 int n, m, k;
-int p[maxn];
+int p[maxn], e[maxn];
 void init()
 {
+    for (int i = 2; i < maxn; i++)
+        e[i] = i;
     for (int i = 2; i < maxn; ++i)
     {
-        if (!p[i])
+        if (e[i] == i)
         {
-            for (int j = i + i; j < maxn; j += i)
-                p[j] = 1;
+            for (int j = i; j < maxn; j += i)
+                e[j] = e[j] / i * (i - 1);
         }
     }
 }
@@ -38,7 +40,7 @@ int main(int argc, char const *argv[])
             int x;
             cin >> x;
             for (int j = x + 1; j < maxn; j++)
-                if (!p[j])
+                if (e[j] >= x)
                 {
                     ans += j;
                     break;

@@ -1,51 +1,12 @@
-// #include <bits/stdc++.h>
 #include <cstdio>
 #include <iostream>
 #define lson rt << 1, l, mid
 #define rson rt << 1 | 1, mid + 1, r
 using namespace std;
-// using ll = long long;
-// using ull = unsigned long long;
-// using pa = pair<int, int>;
-// using ld = long double;
 typedef long long ll;
 const int maxn = 5100;
 const int mod = 100000007;
 ll n, k, m, pre, r;
-// template <class T>
-// inline T read(T &ret)
-// {
-//     int f = 1;
-//     ret = 0;
-//     char ch = getchar();
-//     while (!isdigit(ch))
-//     {
-//         if (ch == '-')
-//             f = -1;
-//         ch = getchar();
-//     }
-//     while (isdigit(ch))
-//     {
-//         ret = (ret << 1) + (ret << 3) + ch - '0';
-//         ch = getchar();
-//     }
-//     ret *= f;
-//     return ret;
-// }
-// template <class T>
-// inline void write(T n)
-// {
-//     if (n < 0)
-//     {
-//         putchar('-');
-//         n = -n;
-//     }
-//     if (n >= 10)
-//     {
-//         write(n / 10);
-//     }
-//     putchar(n % 10 + '0');
-// }
 void swap(ll &a, ll &b)
 {
     ll t = a;

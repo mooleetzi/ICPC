@@ -1,20 +1,4 @@
-#include <algorithm>
-#include <cmath>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <ctime>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <queue>
-#include <set>
-#include <stack>
-#include <string>
-#include <utility>
-#include <vector>
-#define read(x) scanf("%d", &x)
-#define put(x) printf("%d\n", x)
+#include <bits/stdc++.h>
 #define ll long long
 #define lson l, m, rt << 1
 #define rson m + 1, r, rt << 1 | 1

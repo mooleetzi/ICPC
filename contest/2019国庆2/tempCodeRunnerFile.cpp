@@ -1,0 +1,1 @@
+        res = (res + mod - 1) % mod;

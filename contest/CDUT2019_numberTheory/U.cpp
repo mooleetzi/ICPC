@@ -13,40 +13,6 @@ typedef long long ll;
 const int maxn = 5100;
 const int mod = 100000007;
 ll n, k, m, pre, r;
-// template <class T>
-// inline T read(T &ret)
-// {
-//     int f = 1;
-//     ret = 0;
-//     char ch = getchar();
-//     while (!isdigit(ch))
-//     {
-//         if (ch == '-')
-//             f = -1;
-//         ch = getchar();
-//     }
-//     while (isdigit(ch))
-//     {
-//         ret = (ret << 1) + (ret << 3) + ch - '0';
-//         ch = getchar();
-//     }
-//     ret *= f;
-//     return ret;
-// }
-// template <class T>
-// inline void write(T n)
-// {
-//     if (n < 0)
-//     {
-//         putchar('-');
-//         n = -n;
-//     }
-//     if (n >= 10)
-//     {
-//         write(n / 10);
-//     }
-//     putchar(n % 10 + '0');
-// }
 int isprime(int x)
 {
     if (x == 1)

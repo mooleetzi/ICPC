@@ -1,58 +1,125 @@
-#include<bits/stdc++.h>
+/*
+    fft
+    多项式乘法
+    luogup3903
+*/
+
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <complex>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+#define lson rt << 1, l, mid
+#define rson rt << 1 | 1, mid + 1, r
+#define LONG_LONG_MAX 9223372036854775807LL
+#define ll LL
+#define comp std::complex<double>
 using namespace std;
-int a[10];
-int k;
-int dis[10][10];
-int d[10];
-int ans[501];
-void mul(int x){
-    int z = 0;
-    for (int i = 1; i < 500; i++)
-    {
-        ans[i] = ans[i]*x+z;
-        z= ans[i] / 10;
-        ans[i] %= 10;
-    }
-}
-int main(int argc, char const *argv[])
+typedef long long ll;
+typedef long double ld;
+typedef unsigned long long ull;
+typedef pair<int, int> P;
+const int maxn = (int)(1e6 + 10) << 2;
+const double PI = acos(-1);
+template <class T>
+inline T read()
 {
+    int f = 1;
+    T ret = 0;
     char ch = getchar();
-    while(isdigit(ch)){
-        int t = ch - 48;
-        ++a[t];
+    while (!isdigit(ch))
+    {
+        if (ch == '-')
+            f = -1;
         ch = getchar();
     }
-    cin >> k;
-    for (int i = 1; i <= k; i++)
+    while (isdigit(ch))
     {
-        int s, t;
-        cin >> s >> t;
-        dis[s][t] = 1;
+        ret = (ret << 1) + (ret << 3) + ch - '0';
+        ch = getchar();
     }
-    for (int k = 1; k < 10;k++)
-        for (int i = 0; i < 10;i++)
-            for (int j = 1; j < 10;j++)
-                if (dis[i][k]&&dis[k][j])
-                    dis[i][j] = 1;
-    for (int i = 0; i < 10;i++){
-        dis[i][i] = 1;
-        for (int j = 0; j < 10; j++)
-            if(dis[i][j])
-                ++d[i];
+    ret *= f;
+    return ret;
+}
+template <class T>
+inline void write(T n)
+{
+    if (n < 0)
+    {
+        putchar('-');
+        n = -n;
     }
-    ans[1] = 1;
-    for (int i = 0; i < 10;i++){
-        if (a[i])
-            mul(d[i]);
+    if (n >= 10)
+    {
+        write(n / 10);
     }
-    int j;
-    for (int i = 500; i > 0;i--)
-        if (ans[i]){
-            j = i;
-            break;
+    putchar(n % 10 + '0');
+}
+int n, m, lim, r[maxn];
+comp a[maxn], b[maxn];
+void fft(comp *a, int n, int type)
+{
+    for (int i = 0; i < n; i++)
+        if (i < r[i])
+            swap(a[i], a[r[i]]);
+    for (int i = 1; i < lim; i <<= 1)
+    {
+        comp x(cos(PI / i), type * sin(PI / i));
+        for (int j = 0; j < lim; j += (i << 1))
+        {
+            comp y(1, 0);
+            for (int k = 0; k < i; k++, y *= x)
+            {
+                comp p = a[j + k], q = y * a[j + k + i];
+                a[j + k] = p + q;
+                a[j + k + i] = p - q;
+            }
         }
-    for (int i = j; i > 0;i--)
-        cout << ans[i];
-    cout << "\n";
+    }
+}
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    cin >> n;
+    char t1[n + 2], t2[n + 2];
+    cin >> t1 >> t2;
+    for (int i = 0; i < n; i++)
+        a[i] = t1[i] - '0';
+    for (int i = 0; i < n; i++)
+        b[i] = t2[i] - '0';
+    int l = 0;
+    for (lim = 1; lim <= 2 * n; lim <<= 1)
+        ++l;
+    for (int i = 0; i < lim; i++)
+        r[i] = (r[i >> 1] >> 1) | ((i & 1) << (l - 1)); //获取对应位置，优化
+
+    fft(a, lim, 1), fft(b, lim, 1);
+    for (int i = 0; i <= lim; i++)
+        a[i] *= b[i];
+    fft(a, lim, -1);
+    int f = 0;
+    for (int i = 0; i < 2 * n; i++)
+    {
+        int tmp = (int)((a[i].real() + 0.5) / lim);
+        if (!tmp && !f)
+            continue;
+        else if (tmp)
+        {
+            cout << tmp;
+            f = 1;
+        }
+    }
     return 0;
 }

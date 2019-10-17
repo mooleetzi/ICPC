@@ -1,5 +1,5 @@
-//找规律发现序列每个数出现次数为n^(k-1)
-//快速幂即可
+// 找规律发现序列每个数出现次数为n^(k-1)
+// 快速幂即可
 #include <bits/stdc++.h>
 #define lson rt << 1, l, mid
 #define rson rt << 1 | 1, mid + 1, r

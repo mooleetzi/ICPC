@@ -1,90 +1,91 @@
-#include <bits/stdc++.h>
-#define lson rt << 1, l, mid
-#define rson rt << 1 | 1, mid + 1, r
+#pragma GCC optimize(2)
+#include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <iostream>
+#include <queue>
+#include <vector>
+#define P pair<int, int>
 using namespace std;
-using ll = long long;
-using ull = unsigned long long;
-using pa = pair<int, int>;
-using ld = long double;
-int n, m, k;
-const int maxn = 1e3 + 10;
-template <class T>
-inline T read(T &ret)
+const int maxn = 6060;
+const int inf = 0x3f3f3f3f;
+using namespace std;
+struct edge
 {
-    int f = 1;
-    ret = 0;
-    char ch = getchar();
-    while (!isdigit(ch))
-    {
-        if (ch == '-')
-            f = -1;
-        ch = getchar();
-    }
-    while (isdigit(ch))
-    {
-        ret = (ret << 1) + (ret << 3) + ch - '0';
-        ch = getchar();
-    }
-    ret *= f;
-    return ret;
-}
-template <class T>
-inline void write(T n)
-{
-    if (n < 0)
-    {
-        putchar('-');
-        n = -n;
-    }
-    if (n >= 10)
-    {
-        write(n / 10);
-    }
-    putchar(n % 10 + '0');
-}
-int row[maxn], vis[maxn];
-vector<int> g1[maxn], g2[maxn];
+    int to, cap, cost, rev;
+};
+int n, m, maxflow, s, t, mincost, h[maxn];
+vector<edge> G[maxn];
+int dist[maxn], prevv[maxn], preve[maxn]; // 前驱节点和对应边
 inline void init()
 {
-    memset(row, -1, sizeof(int) * (n + 2));
-    memset(vis, 0, sizeof vis);
-    for (int i = 1; i <= n; i++)
-        g1[i].clear(), g2[i].clear();
+    for (int i = 1; i <= maxn; i++)
+        G[i].clear();
 }
-inline void add(int x, int y)
+inline void add_edge(int from, int to, int cap, int cost)
 {
-    g1[x].emplace_back(y);
-    g2[y].emplace_back(x);
-}
-int find(int u)
+    G[from].push_back((edge){to, cap, cost, (int)G[to].size()});
+    G[to].push_back((edge){from, 0, -cost, (int)G[from].size() - 1});
+} // 在vector 之中找到边的位置所在!
+inline void min_cost_flow(int f)
 {
-    int sz = g1[u].size();
-    for (int i = 0; i < sz; i++)
+    memset(h, 0, sizeof(h));
+    while (f > 0)
     {
-        int v = g1[u][i];
-        if (!vis[v])
+        priority_queue<P, vector<P>, greater<P>> D;
+        memset(dist, inf, sizeof dist);
+        dist[s] = 0;
+        D.push(P(0, s));
+        while (!D.empty())
         {
-            vis[v] = 1;
-            if (row[v] == -1 || find(row[v]))
+            P now = D.top();
+            D.pop();
+            if (dist[now.second] < now.first)
+                continue;
+            int v = now.second;
+            for (int i = 0; i < (int)G[v].size(); ++i)
             {
-                row[v] = u;
-                return 1;
+                edge &e = G[v][i];
+                if (e.cap > 0 && dist[e.to] > dist[v] + e.cost + h[v] - h[e.to])
+                {
+                    dist[e.to] = dist[v] + e.cost + h[v] - h[e.to];
+                    prevv[e.to] = v;
+                    preve[e.to] = i;
+                    D.push(P(dist[e.to], e.to));
+                }
             }
         }
+        // 无法增广 ， 就是找到了答案了！
+        if (dist[t] == inf)
+            break;
+        for (int i = 1; i <= n; ++i)
+            h[i] += dist[i];
+        int d = f;
+        for (int v = t; v != s; v = prevv[v])
+            d = min(d, G[prevv[v]][preve[v]].cap);
+        f -= d;
+        maxflow += d;
+        mincost += d * h[t];
+        for (int v = t; v != s; v = prevv[v])
+        {
+            edge &e = G[prevv[v]][preve[v]];
+            e.cap -= d;
+            G[v][e.rev].cap += d;
+        }
     }
-    return 0;
 }
-int maxMacth()
+struct node
 {
-    int res = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        memset(vis, 0, sizeof(int) * (m + 1));
-        res += find(i);
-    }
-    return res;
+    int x, y, idx;
+};
+inline int getDis(node a, node b)
+{
+    return abs(a.x - b.x) + abs(a.y - b.y);
 }
-int main(int argc, char const *argv[])
+char ss[maxn][maxn];
+vector<node> H, M;
+int main()
 {
 #ifndef ONLINE_JUDGE
     freopen("in.txt", "r", stdin);
@@ -93,36 +94,40 @@ int main(int argc, char const *argv[])
     ios::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    while (cin >> n >> m >> k && (m + n + k))
+    while (cin >> n >> m && (n + m))
     {
+        H.clear(), M.clear();
         init();
-        for (int i = 0; i < k; i++)
+        for (int i = 0; i < n; i++)
+            cin >> ss[i];
+        int item = 0;
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                if (ss[i][j] != '.')
+                {
+                    node cur;
+                    cur.x = i, cur.y = j, cur.idx = ++item;
+                    if (ss[i][j] == 'H')
+                        H.push_back(cur);
+                    else
+                        M.push_back(cur);
+                }
+        s = item + 1, t = item + 2;
+        // cout << item << " " << s << " " << t << "\n";
+        int hsz = H.size();
+        int msz = M.size();
+        for (int i = 0; i < msz; i++)
         {
-            int x, y;
-            // read(x), read(y);
-            cin >> x >> y;
-            add(x, y);
-        }
-        int ans = maxMacth();
-        cout << ans << " ";
-        vector<pair<char, int>> out;
-        out.clear();
-        for (int i = 1; i <= m; i++)
-            if (row[i] != -1)
+            add_edge(s, M[i].idx, 1, 0);
+            for (int j = 0; j < hsz; j++)
             {
-                if (g1[row[i]].size() > g2[i].size())
-                {
-                    out.emplace_back('r', row[i]);
-                }
-                else
-                {
-                    out.emplace_back('c', i);
-                }
+                add_edge(M[i].idx, H[j].idx, 1, getDis(M[i], H[j]));
             }
-        sort(out.begin(), out.end());
-        for (int i = 0; i < ans - 1; i++)
-            cout << out[i].first << out[i].second << " ";
-        cout << out[ans - 1].first << out[ans - 1].second << '\n';
+        }
+        for (int j = 0; j < hsz; j++)
+            add_edge(H[j].idx, t, 1, 0);
+        min_cost_flow(inf);
+        cout << mincost << "\n";
     }
     return 0;
 }
