@@ -1,92 +1,74 @@
-#include <cstdio>
-#include <cstring>
+/*
+    hdu6346
+    O(n^3)准确复杂度
+*/
+#include <algorithm>
 #include <iostream>
-#define inf 0x3f3f3f3f
+#include <stdio.h>
 using namespace std;
-const int maxn = 1e3 + 10;
-int k, m, n, x, y;
-int visx[maxn], visy[maxn], wx[maxn], wy[maxn], minz, lx[maxn], ly[maxn], slack[maxn], a[maxn][maxn];
-int find(int x)
+#define LL long long
+const LL N = 222;
+const LL inf = 0x3f3f3f3f3f3f3f3f;
+LL n;
+LL val[N][N];
+LL lx[N], ly[N];
+LL linky[N];
+LL pre[N];
+bool vis[N];
+bool visx[N], visy[N];
+LL slack[N];
+
+void bfs(LL k)
 {
-    visx[x] = 1;
-    for (int v = 1; v <= y; v++)
+    LL px, py = 0, yy = 0, d;
+    memset(pre, 0, sizeof(LL) * (n + 2));
+    memset(slack, inf, sizeof(LL) * (n + 2));
+    linky[py] = k;
+    do
     {
-        if (!visy[v])
-        {
-            int t = wx[x] + wy[v] - a[x][v];
-            if (!t)
+        px = linky[py], d = inf, vis[py] = 1;
+        for (LL i = 1; i <= n; i++)
+            if (!vis[i])
             {
-                visy[v] = 1;
-                if (ly[v] == -1 || find(ly[v]))
-                {
-                    ly[v] = x;
-                    lx[x] = x;
-                    return 1;
-                }
+                if (slack[i] > lx[px] + ly[i] - val[px][i])
+                    slack[i] = lx[px] + ly[i] - val[px][i], pre[i] = py;
+                if (slack[i] < d)
+                    d = slack[i], yy = i;
             }
-            else if (slack[v] > t)
-            {
-                slack[v] = t;
-            }
-        }
-    }
-    return 0;
+        for (LL i = 0; i <= n; i++)
+            if (vis[i])
+                lx[linky[i]] -= d, ly[i] += d;
+            else
+                slack[i] -= d;
+        py = yy;
+    } while (linky[py]);
+    while (py)
+        linky[py] = linky[pre[py]], py = pre[py];
 }
-int KM()
+LL KM()
 {
-    memset(ly, -1, sizeof ly);
-    memset(wy, 0, sizeof wy);
-    for (int i = 1; i <= x; i++)
-    {
-        wx[i] = -inf;
-        for (int j = 1; j <= y; j++)
-            if (a[i][j] > wx[i])
-                wx[i] = a[i][j];
-    }
-    for (int i = 1; i <= x; i++)
-    {
-        for (int j = 1; j <= y; j++)
-            slack[j] = inf;
-        while (1)
-        {
-            memset(visx, 0, sizeof visx);
-            memset(visy, 0, sizeof visy);
-            if (find(i))
-                break;
-            int d = inf;
-            for (int j = 1; j <= y; j++)
-            {
-                if (!visy[j] && d > slack[j])
-                    d = slack[j];
-            }
-            for (int j = 1; j <= x; j++)
-                if (visx[j])
-                    wx[j] -= d;
-            for (int j = 1; j <= y; j++)
-                if (visy[j])
-                    wy[j] += d;
-                else
-                    slack[j] -= d;
-        }
-    }
-    int ans = 0;
-    for (int i = 1; i <= y; i++)
-        if (ly[i] != -1)
-            ans += a[ly[i]][i];
+    memset(lx, 0, sizeof(LL) * (n + 2));
+    memset(ly, 0, sizeof(LL) * (n + 2));
+    memset(linky, 0, sizeof(LL) * (n + 2));
+    for (LL i = 1; i <= n; i++)
+        memset(vis, 0, sizeof(bool) * (n + 2)), bfs(i);
+    LL ans = 0;
+    for (LL i = 1; i <= n; ++i)
+        ans += lx[i] + ly[i];
     return ans;
 }
 int main()
 {
-    ios::sync_with_stdio(false);
-    memset(a, 0, sizeof a);
-    cin >> x >> y >> k;
-    for (int i = 1; i <= k; i++)
+    LL T;
+    scanf("%lld", &T);
+    LL cas = 0;
+    while (T--)
     {
-        int q, w, e;
-        cin >> q >> w >> e;
-        a[q][w] = e;
+        scanf("%lld", &n);
+        for (LL i = 1; i <= n; i++)
+            for (LL j = 1; j <= n; j++)
+                scanf("%lld", &val[i][j]), val[i][j] = -val[i][j];
+        printf("Case #%lld: %lld\n", ++cas, -KM());
     }
-    int ans = KM();
-    cout << ans << "\n";
     return 0;
 }

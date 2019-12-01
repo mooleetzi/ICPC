@@ -79,3 +79,62 @@ ll query(int rt, int L, int R)
         ans += query(rson, L, R);
     return ans;
 }
+
+
+
+//区间合并求最长上升子序列
+struct segTree
+{
+    int num[maxn];
+    struct node
+    {
+        int l, r;
+        ll lsum, rsum, sum;
+    } tr[maxn << 2];
+    inline void pushup(int rt)
+    {
+        int l = tr[rt].l, r = tr[rt].r;
+        int mid = (l + r) >> 1;
+        tr[rt].lsum = tr[lson].lsum;
+        tr[rt].rsum = tr[rson].rsum;
+        tr[rt].sum = max(tr[lson].sum, tr[rson].sum);
+        if (num[mid] <= num[mid + 1])
+        {
+            if (tr[lson].lsum == mid - l + 1)
+                tr[rt].lsum = tr[lson].lsum + tr[rson].lsum;
+            if (tr[rson].rsum == r - mid)
+                tr[rt].rsum = tr[lson].rsum + tr[rson].rsum;
+            tr[rt].sum = max(tr[rt].sum, tr[lson].rsum + tr[rson].lsum);
+        }
+    }
+    void build(int rt, int l, int r)
+    {
+        tr[rt].l = l;
+        tr[rt].r = r;
+        if (l == r)
+        {
+            tr[rt].lsum = tr[rt].rsum = tr[rt].sum = 1;
+            return;
+        }
+        int mid = l + r >> 1;
+        build(lson, l, mid);
+        build(rson, mid + 1, r);
+        pushup(rt);
+    }
+    ll query(int rt, int L, int R)
+    {
+        int l = tr[rt].l;
+        int r = tr[rt].r;
+        if (l >= L && r <= R)
+            return tr[rt].sum;
+        int mid = l + r >> 1;
+        ll ans = 0;
+        if (L <= mid)
+            ans = max(ans, query(lson, L, R));
+        if (R > mid)
+            ans = max(ans, query(rson, L, R));
+        if (num[mid] <= num[mid + 1])
+            ans = max(ans, min(mid - L + 1LL, tr[lson].rsum) + min(1LL * R - mid, tr[rson].lsum));
+        return ans;
+    }
+};

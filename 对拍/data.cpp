@@ -19,14 +19,10 @@ int main()
     printf("%d\n", n);
     for (int i = 0; i < n; i++)
     {
-        int q = rand() % 100;
-        printf("%d\n", q);
-        for (int i = 0; i < q; i++)
-        {
-            int x = rand() % 1000 + 1;
-            int y = rand() % 1000 + 1;
-            printf("%d %d\n", x, y);
-        }
+        int x = rand() % (int)(10) + 1;
+        int y = rand() % (int)(10) + 1;
+        int k = rand() % (int)(10) + 2;
+        printf("%d %d %d\n", x, y, k);
     }
     return 0;
 }

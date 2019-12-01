@@ -1,93 +1,112 @@
 #include <algorithm>
+#include <cctype>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <map>
-#include <utility>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <stack>
+#if __cplusplus >= 201103L
+#include <unordered_map>
+#include <unordered_set>
+#endif
 #include <vector>
+#define lson rt << 1, l, mid
+#define rson rt << 1 | 1, mid + 1, r
+#define LONG_LONG_MAX 9223372036854775807LL
+#define pblank putchar(' ')
+#define ll LL
+#define fastIO ios::sync_with_stdio(false), cin.tie(0), cout.tie(0)
 using namespace std;
-#define ll long long
-#define P pair<ll, ll>
-int t;
-ll n;
-ll maxx, maxy, max_x;
-ll cntx1, cntx2, cnty1, cnty2;
-ll cnt1, cnt2;
-/*
-记录每个点的横纵坐标所在行列的点的数目
-找到最大的maxx,maxy,max_x = maxx+maxy
-其实消灭蟑螂的最大数目只能是max_x,或者max_x-1
-cnt1 :  max_x 的集合数目
-cnt2 :  max_x -1  集合数目
-*/
-int main()
+typedef long long ll;
+typedef long double ld;
+typedef unsigned long long ull;
+typedef pair<int, int> P;
+int n, m, k;
+const int maxn = 1e5 + 10;
+template <class T>
+inline T read()
 {
-    // freopen("input.txt", "r", stdin);
-    // freopen("biaoda.out", "w", stdout);
-    scanf("%d", &t);
-    for (int i = 1; i <= t; i++)
+    int f = 1;
+    T ret = 0;
+    char ch = getchar();
+    while (!isdigit(ch))
     {
-        scanf("%lld", &n);
-        map<ll, ll> cntx, cnty;
-        vector<P> ve(n); //必须为 ()，
-        maxx = 0;
-        maxy = 0;
-        for (auto &it : ve)
-        { //前面ve(n)一定要是n，不然输入不完
-            scanf("%d%d", &it.first, &it.second);
-            maxx = max(maxx, ++cntx[it.first]);
-            maxy = max(maxy, ++cnty[it.second]);
-        }
-        //两个if为特判
-        if (cntx.size() == 1 || cnty.size() == 1)
-        {
-            printf("Case %d: %lld 1\n", i, n);
-            continue;
-            //cntx.size()==1时全在一列，只有maxx,不存在maxx-1
-        }
-        if (maxx == 1 && maxy == 1)
-        { //一定是&&
-            printf("Case %d: 2 %lld\n", i, n * (n - 1) / 2);
-            continue;
-        }
-        cntx1 = 0, cntx2 = 0;
-        cnty1 = 0, cnty2 = 0;
-        for (auto &it : cntx)
-        {
-            if (it.second == maxx)
-                cntx1++;
-            else if (it.second == maxx - 1)
-                cntx2++;
-        }
-        for (auto &it : cnty)
-        {
-            if (it.second == maxy)
-                cnty1++;
-            else if (it.second == maxy - 1)
-                cnty2++;
-        }
-        max_x = maxx + maxy; //在最好情况下，下面的两个式子成立
-        cnt1 = cntx1 * cnty1;
-        cnt2 = cntx1 * cnty2 + cnty1 * cntx2;
-        //只需要遍历输入的所有点，因为cntx[]==0||cnty[]==0的无意义
-        for (auto &it : ve)
-        {
-            ll num = cntx[it.first] + cnty[it.second];
-            if (num == max_x)
-            {
-                cnt1--; //这个点会让max_x变为max_x -1
-                cnt2++;
-            }
-            else if (num == max_x - 1)
-                cnt2--; //这个点会让max_x -1变为max_x -2
-        }
-        if (cnt1 > 0)
-        {
-            printf("Case %d: %lld %lld\n", i, max_x, cnt1);
-        }
+        if (ch == '-')
+            f = -1;
+        ch = getchar();
+    }
+    while (isdigit(ch))
+    {
+        ret = (ret << 1) + (ret << 3) + ch - '0';
+        ch = getchar();
+    }
+    ret *= f;
+    return ret;
+}
+template <class T>
+inline void write(T n)
+{
+    if (n < 0)
+    {
+        putchar('-');
+        n = -n;
+    }
+    if (n >= 10)
+    {
+        write(n / 10);
+    }
+    putchar(n % 10 + '0');
+}
+template <class T>
+inline void writeln(const T &n)
+{
+    write(n);
+    puts("");
+}
+template <typename T>
+void _write(const T &t)
+{
+    write(t);
+}
+template <typename T, typename... Args>
+void _write(const T &t, Args... args)
+{
+    write(t), pblank;
+    _write(args...);
+}
+template <typename T, typename... Args>
+inline void write_line(const T &t, const Args &... data)
+{
+    _write(t, data...);
+    puts("");
+}
+inline ll lcm(ll a, ll b)
+{
+    return a / __gcd(a, b) * b;
+}
+int main(int argc, char const *argv[])
+{
+#ifndef ONLINE_JUDGE
+    // freopen("in.txt", "r", stdin);
+    // freopen("out.txt", "w", stdout);
+#endif
+    int t = read<int>();
+    while (t--)
+    {
+        ll r = read<ll>(), b = read<ll>(), k = read<ll>();
+        if (r > b)
+            swap(r, b);
+        ll g = lcm(r, b);
+        ll cur = (g / r - 1 + g / b - 1) / (g / b);
+        if (cur < k)
+            puts("OBEY");
         else
-            printf("Case %d: %lld %lld\n", i, max_x - 1, cnt2);
+            puts("REBEL");
     }
     return 0;
 }
